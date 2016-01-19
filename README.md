@@ -4,7 +4,7 @@
 
 1. wercker account.
 2. GCE account. [And getting started.](https://cloud.google.com/compute/docs/quickstart).
-                [Howto push containers to Google container registry http://devcenter.wercker.com/docs/containers/pushing-containers.html#gcr]
+                [Howto push containers to Google container registry](http://devcenter.wercker.com/docs/containers/pushing-containers.html#gcr]
 4. kubernetes. [And getting started](http://kubernetes.io/gettingstarted/).
 
 ## Configuring GCE
@@ -17,7 +17,14 @@ Though it possible to bootstrap an GCE Container Engine Cluster with just a seve
 The kubernetes project provides [documentation](https://github.com/GoogleCloudPlatform/kubernetes/blob/master/docs/getting-started-guides/gce.md) for this case.
 
 
-## Configuring on CoreOS
+## Wercker configuration 
+
+*Custom variables*
+See Werker documentation on [Environment variables](http://devcenter.wercker.com/learn/wercker-yml/environment-variables.html)
+- `GCLOUD_ACCOUNT` this expects your Google Cloud platform account (email address)
+- `GCLOUD_REFRESH` this expects your Google Cloud platform refresh token. To retrieve this token, assuming your account is active, you can run `gcloud auth print-refresh-token`
+
+## Configuring on Google computer engine
 
 
 *For Master:*
