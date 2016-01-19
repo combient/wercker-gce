@@ -30,7 +30,7 @@ deploy:
         password: $GCR_AUTH_TOKEN
         tag: $WERCKER_GIT_COMMIT
         repository: $GCLOUD_REPOSITORY
-        registry: https://eu.gcr.io
+        registry: $GCLOUD_REGISTRY
     # Run this to create the rc and service
     initialize:
     - kubectl:
