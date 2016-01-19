@@ -28,7 +28,7 @@ deploy:
     - internal/docker-push:
         username: _token
         password: $GCR_AUTH_TOKEN
-        #<MY-PROJECT>/<MY-IMAGE>
+        tag: $WERCKER_GIT_COMMIT
         repository: eu.gcr.io/wercker-gce-p-oluies01/wercker-gce
         registry: https://eu.gcr.io
     # Run this to create the rc and service
