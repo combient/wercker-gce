@@ -1,0 +1,64 @@
+build:
+    box: combient/java-mvn
+    steps:
+
+    - script:
+        name: show base information
+        code: |
+            mvn -v
+            echo $JAVA_HOME
+            java -version
+            javac -version
+    - script:
+        name: maven package
+        code: |
+            mvn -Dmaven.repo.local=$WERCKER_CACHE_DIR package
+    # Test the project
+    - script:
+        name: maven test
+        code: |
+            mvn -Dmaven.repo.local=$WERCKER_CACHE_DIR test
+
+deploy:
+    box: google/cloud-sdk
+    steps:
+    - script:
+        name: install jq
+        code: wget -O /usr/local/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5rc1/jq-linux-x86_64-static && chmod a+x /usr/local/bin/jq
+    - script:
+        name: gcr.io authentication
+        code: |
+            gcloud auth activate-refresh-token $GCLOUD_ACCOUNT $GCLOUD_REFRESH_TOKEN
+            gcloud docker --authorize-only
+            export GCR_AUTH_TOKEN=$(cat $HOME/.dockercfg | jq --raw-output '.["https://gcr.io"].auth' | base64 --decode | cut -d ':' -f2)
+    - internal/docker-push:
+        username: _token
+        password: $GCR_AUTH_TOKEN
+        #<MY-PROJECT>/<MY-IMAGE>
+        repository: eu.gcr.io/wercker-gce-p-oluies01/wercker-gce
+        registry: https://eu.gcr.io
+    # Run this to create the rc and service
+    initialize:
+    - kubectl:
+        server: $KUBERNETES_MASTER
+        username: $KUBERNETES_USERNAME
+        password: $KUBERNETES_PASSWORD
+        insecure-skip-tls-verify: true
+        command: create -f cities-controller.json
+
+    - kubectl:
+        server: $KUBERNETES_MASTER
+        username: $KUBERNETES_USERNAME
+        password: $KUBERNETES_PASSWORD
+        insecure-skip-tls-verify: true
+        command: create -f cities-service.json
+
+    # Update the replica controller to $WERCKER_GIT_COMMIT
+    rolling-update:
+    - kubectl:
+        server: $KUBERNETES_MASTER
+        username: $KUBERNETES_USERNAME
+        password: $KUBERNETES_PASSWORD
+        insecure-skip-tls-verify: true
+        command: rolling-update cities
+        image: quay.io/wercker/wercker-kubernetes-quay:$WERCKER_GIT_COMMIT
