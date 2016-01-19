@@ -13,12 +13,6 @@ build:
         name: maven package
         code: |
             mvn -Dmaven.repo.local=$WERCKER_CACHE_DIR package
-    # Test the project
-    - script:
-        name: maven test
-        code: |
-            mvn -Dmaven.repo.local=$WERCKER_CACHE_DIR test
-
 deploy:
     box: google/cloud-sdk
     steps:
