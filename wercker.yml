@@ -40,20 +40,6 @@ deploy:
         registry: $GCLOUD_REGISTRY
     # Run this to create the rc and service
     initialize:
-    - kubectl:
-        server: $KUBERNETES_MASTER
-        username: $KUBERNETES_USERNAME
-        password: $KUBERNETES_PASSWORD
-        insecure-skip-tls-verify: true
-        command: create -f cities-controller.json
-
-    - kubectl:
-        server: $KUBERNETES_MASTER
-        username: $KUBERNETES_USERNAME
-        password: $KUBERNETES_PASSWORD
-        insecure-skip-tls-verify: true
-        command: create -f cities-service.json
-
     # Update the replica controller to $WERCKER_GIT_COMMIT
     rolling-update:
     - kubectl:
@@ -62,4 +48,4 @@ deploy:
         password: $KUBERNETES_PASSWORD
         insecure-skip-tls-verify: true
         command: rolling-update cities
-        image: eu.gcr.io/wercker-gce-p-oluies01/wercker-gce:$WERCKER_GIT_COMMIT
+        image: $GCLOUD_REPOSITORY:$WERCKER_GIT_COMMIT
