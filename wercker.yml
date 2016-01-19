@@ -35,6 +35,7 @@ deploy:
         password: $GCR_AUTH_TOKEN
         tag: $WERCKER_GIT_COMMIT
         cmd: ./start.sh
+        ports: "8080"
         repository: $GCLOUD_REPOSITORY
         registry: $GCLOUD_REGISTRY
     # Run this to create the rc and service

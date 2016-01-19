@@ -19,14 +19,19 @@ The kubernetes project provides [documentation](https://github.com/GoogleCloudPl
 
 ## Wercker configuration 
 
-*Custom variables*
+*Custom variables for the deploy step*
 See Werker documentation on [Environment variables](http://devcenter.wercker.com/learn/wercker-yml/environment-variables.html)
-- `GCLOUD_ACCOUNT` this expects your Google Cloud platform account (email address)
-- `GCLOUD_REFRESH` this expects your Google Cloud platform refresh token. To retrieve this token, assuming your account is active, you can run `gcloud auth print-refresh-token`
+- `GCLOUD_ACCOUNT`  Google Cloud platform account (email address)
+- `GCLOUD_REFRESH`  Google Cloud platform refresh token. To retrieve this token, assuming your account is active, you can run `gcloud auth print-refresh-token`
+- `$GCLOUD_REPOSITORY` repository to push to, for example eu.gcr.io/wercker-gce-p-oluies01-1195/wercker-gce
+                       For GCR this is This is repository/project-id/imagename
+- `$GCLOUD_REGISTRY` repository to push to, for example https://eu.gcr.io
 
 *Image push step*
+
 1. Add a custom target with name `deploy`
-2.
+2. configure the variables as per above 
+[example image](http://i.imgur.com/HVcxkjN.png)
          
 
 
