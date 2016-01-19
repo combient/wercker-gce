@@ -24,6 +24,12 @@ See Werker documentation on [Environment variables](http://devcenter.wercker.com
 - `GCLOUD_ACCOUNT` this expects your Google Cloud platform account (email address)
 - `GCLOUD_REFRESH` this expects your Google Cloud platform refresh token. To retrieve this token, assuming your account is active, you can run `gcloud auth print-refresh-token`
 
+*Image push step*
+1. Add a custom target with name `deploy`
+2.
+         
+
+
 ## Configuring on Google computer engine
 
 

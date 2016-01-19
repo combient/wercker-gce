@@ -55,4 +55,4 @@ deploy:
         password: $KUBERNETES_PASSWORD
         insecure-skip-tls-verify: true
         command: rolling-update cities
-        image: quay.io/wercker/wercker-kubernetes-quay:$WERCKER_GIT_COMMIT
+        image: eu.gcr.io/wercker-gce-p-oluies01/wercker-gce:$WERCKER_GIT_COMMIT
