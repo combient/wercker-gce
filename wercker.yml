@@ -10,6 +10,11 @@ build:
             java -version
             javac -version
     - script:
+        name: copy start script
+        code: |
+           cp start.sh "$WERCKER_OUTPUT_DIR"
+           chmod u+x "$WERCKER_OUTPUT_DIR"/start.sh
+    - script:
         name: maven package
         code: |
             mvn -Dmaven.repo.local=$WERCKER_CACHE_DIR package
@@ -29,6 +34,7 @@ deploy:
         username: _token
         password: $GCR_AUTH_TOKEN
         tag: $WERCKER_GIT_COMMIT
+        cmd: ./start.sh
         repository: $GCLOUD_REPOSITORY
         registry: $GCLOUD_REGISTRY
     # Run this to create the rc and service
