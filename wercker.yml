@@ -35,6 +35,7 @@ deploy:
             gcloud info
             gcloud components list
             kubectl describe no
+            kubectl get rc
             export GCR_AUTH_TOKEN=$(cat $HOME/.dockercfg | jq --raw-output '.["https://gcr.io"].auth' | base64 --decode | cut -d ':' -f2)
     - internal/docker-push:
         username: _token
