@@ -26,6 +26,9 @@ See Werker documentation on [Environment variables](http://devcenter.wercker.com
 - `$GCLOUD_REPOSITORY` repository to push to, for example eu.gcr.io/wercker-gce-p-oluies01-1195/wercker-gce
                        For GCR this is This is repository/project-id/imagename
 - `$GCLOUD_REGISTRY` repository to push to, for example https://eu.gcr.io
+- `$GCLOUD_COMPUTEZONE` europe-west1-d
+- `$GCLOUD_PROJECT` projectname 
+- `$GCLOUD_GCE_CLUSTER`clustername
 
 *Image push step*
 
