@@ -48,6 +48,6 @@ deploy:
         server: $KUBERNETES_MASTER
         username: $KUBERNETES_USERNAME
         password: $KUBERNETES_PASSWORD
-        insecure-skip-tls-verify: true
+        insecure-skip-tls-verify: false
         command: rolling-update Commit $WERCKER_GIT_COMMIT to $KUBERNETES_MASTER
         image: $GCLOUD_REPOSITORY:$WERCKER_GIT_COMMIT
