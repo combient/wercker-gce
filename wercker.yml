@@ -32,7 +32,6 @@ deploy:
             gcloud config set compute/zone $GCLOUD_COMPUTEZONE
             gcloud config set project $GCLOUD_PROJECT
             gcloud container clusters get-credentials $GCLOUD_GCE_CLUSTER
-            gcloud - kubectl authentication
             kubectl describe no
             export GCR_AUTH_TOKEN=$(cat $HOME/.dockercfg | jq --raw-output '.["https://gcr.io"].auth' | base64 --decode | cut -d ':' -f2)
     - internal/docker-push:
