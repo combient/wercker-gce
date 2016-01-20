@@ -1,5 +1,7 @@
 # werker java dropwizard GCE
 
+[![wercker status](https://app.wercker.com/status/9de76917e806948d2856b218f098d3a5/m "wercker status")](https://app.wercker.com/project/bykey/9de76917e806948d2856b218f098d3a5)
+
 ## Prerequisites
 
 1. wercker account.
