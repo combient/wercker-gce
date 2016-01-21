@@ -58,11 +58,19 @@ deploy:
         registry: $GCLOUD_REGISTRY
         # Run this to create the rc and service
     initialize:
+    - script:
+        name: Google cloud authentication
+        code: |
+            gcloud auth activate-refresh-token $GCLOUD_ACCOUNT $GCLOUD_REFRESH_TOKEN
+            gcloud docker --authorize-only
+            gcloud config set compute/zone $GCLOUD_COMPUTEZONE
+            gcloud config set project $GCLOUD_PROJECT
+            gcloud container clusters get-credentials $GCLOUD_GCE_CLUSTER
     - kubectl:
         server: $KUBERNETES_MASTER
         username: $KUBERNETES_USERNAME
         password: $KUBERNETES_PASSWORD
-        insecure-skip-tls-verify: true
+        insecure-skip-tls-verify: false
         command: create -f controller.json
     - kubectl:
         server: $KUBERNETES_MASTER
@@ -72,6 +80,14 @@ deploy:
         command: create -f helloworld-service.json
     # Update the replica controller to $WERCKER_GIT_COMMIT
     rolling-update:
+    - script:
+        name: Google cloud authentication
+        code: |
+            gcloud auth activate-refresh-token $GCLOUD_ACCOUNT $GCLOUD_REFRESH_TOKEN
+            gcloud docker --authorize-only
+            gcloud config set compute/zone $GCLOUD_COMPUTEZONE
+            gcloud config set project $GCLOUD_PROJECT
+            gcloud container clusters get-credentials $GCLOUD_GCE_CLUSTER
     - kubectl:
         server: $KUBERNETES_MASTER
         username: $KUBERNETES_USERNAME
