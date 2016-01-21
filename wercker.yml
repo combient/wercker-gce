@@ -57,25 +57,25 @@ deploy:
         repository: $GCLOUD_REPOSITORY
         registry: $GCLOUD_REGISTRY
         # Run this to create the rc and service
-        initialize:
-        - kubectl:
-            server: $KUBERNETES_MASTER
-            username: $KUBERNETES_USERNAME
-            password: $KUBERNETES_PASSWORD
-            insecure-skip-tls-verify: true
-            command: create -f controller.json
-        - kubectl:
-            server: $KUBERNETES_MASTER
-            username: $KUBERNETES_USERNAME
-            password: $KUBERNETES_PASSWORD
-            insecure-skip-tls-verify: false
-            command: create -f helloworld-service.json
-        # Update the replica controller to $WERCKER_GIT_COMMIT
-        rolling-update:
-        - kubectl:
-            server: $KUBERNETES_MASTER
-            username: $KUBERNETES_USERNAME
-            password: $KUBERNETES_PASSWORD
-            insecure-skip-tls-verify: false
-            command: rolling-update Commit $WERCKER_GIT_COMMIT to $KUBERNETES_MASTER
-            image: $GCLOUD_REPOSITORY:$WERCKER_GIT_COMMIT
+    initialize:
+    - kubectl:
+        server: $KUBERNETES_MASTER
+        username: $KUBERNETES_USERNAME
+        password: $KUBERNETES_PASSWORD
+        insecure-skip-tls-verify: true
+        command: create -f controller.json
+    - kubectl:
+        server: $KUBERNETES_MASTER
+        username: $KUBERNETES_USERNAME
+        password: $KUBERNETES_PASSWORD
+        insecure-skip-tls-verify: false
+        command: create -f helloworld-service.json
+    # Update the replica controller to $WERCKER_GIT_COMMIT
+    rolling-update:
+    - kubectl:
+        server: $KUBERNETES_MASTER
+        username: $KUBERNETES_USERNAME
+        password: $KUBERNETES_PASSWORD
+        insecure-skip-tls-verify: false
+        command: rolling-update Commit $WERCKER_GIT_COMMIT to $KUBERNETES_MASTER
+        image: $GCLOUD_REPOSITORY:$WERCKER_GIT_COMMIT
