@@ -17,7 +17,7 @@ build:
      # Create cities-controller.json for initialization
     - script:
         name: create controller.json
-        code: ./createcontrollerscript.sh
+        code: bash ./createcontrollerscript.sh
      # Copy binary to location that gets passed along to deploy
     - script:
         name: copy json
