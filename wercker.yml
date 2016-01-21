@@ -65,6 +65,7 @@ deploy:
             gcloud docker --authorize-only
             gcloud config set compute/zone $GCLOUD_COMPUTEZONE
             gcloud config set project $GCLOUD_PROJECT
+            gcloud config set container/cluster $GCLOUD_GCE_CLUSTER
             gcloud container clusters get-credentials $GCLOUD_GCE_CLUSTER
             export GCR_AUTH_TOKEN=$(cat $HOME/.dockercfg | jq --raw-output '.["https://gcr.io"].auth' | base64 --decode | cut -d ':' -f2)
     - kubectl:
@@ -88,6 +89,7 @@ deploy:
             gcloud docker --authorize-only
             gcloud config set compute/zone $GCLOUD_COMPUTEZONE
             gcloud config set project $GCLOUD_PROJECT
+            gcloud config set container/cluster $GCLOUD_GCE_CLUSTER
             gcloud container clusters get-credentials $GCLOUD_GCE_CLUSTER
             export GCR_AUTH_TOKEN=$(cat $HOME/.dockercfg | jq --raw-output '.["https://gcr.io"].auth' | base64 --decode | cut -d ':' -f2)
     - kubectl:
