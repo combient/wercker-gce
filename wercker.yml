@@ -27,6 +27,7 @@ deploy:
     - script:
         name: Google cloud authentication
         code: |
+            google/cloud-sdk gcloud init
             gcloud auth activate-refresh-token $GCLOUD_ACCOUNT $GCLOUD_REFRESH_TOKEN
             gcloud docker --authorize-only
             gcloud config set compute/zone $GCLOUD_COMPUTEZONE
