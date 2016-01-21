@@ -14,6 +14,14 @@ build:
         code: |
            cp start.sh "$WERCKER_OUTPUT_DIR"
            chmod u+x "$WERCKER_OUTPUT_DIR"/start.sh
+     # Create cities-controller.json for initialization
+     - script:
+        name: create cities-controller.json
+        code: ./createcontroller.json.sh
+     # Copy binary to location that gets passed along to deploy
+    - script:
+        name: copy binary
+        code: cp app cities-service.json cities-controller.json "$WERCKER_OUTPUT_DIR"
     - script:
         name: maven package
         code: |
