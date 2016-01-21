@@ -15,13 +15,13 @@ build:
            cp start.sh "$WERCKER_OUTPUT_DIR"
            chmod u+x "$WERCKER_OUTPUT_DIR"/start.sh
      # Create cities-controller.json for initialization
-     - script:
+    - script:
         name: create controller.json
         code: ./createcontrollerscript.sh
      # Copy binary to location that gets passed along to deploy
     - script:
         name: copy json
-        code: cp controller.json "$WERCKER_OUTPUT_DIR"
+        code: cp controller.json helloworld-service.json "$WERCKER_OUTPUT_DIR"
     - script:
         name: maven package
         code: |
@@ -56,10 +56,26 @@ deploy:
         ports: "8080"
         repository: $GCLOUD_REPOSITORY
         registry: $GCLOUD_REGISTRY
-    - kubectl:
-        server: $KUBERNETES_MASTER
-        username: $KUBERNETES_USERNAME
-        password: $KUBERNETES_PASSWORD
-        insecure-skip-tls-verify: false
-        command: rolling-update Commit $WERCKER_GIT_COMMIT to $KUBERNETES_MASTER
-        image: $GCLOUD_REPOSITORY:$WERCKER_GIT_COMMIT
+        # Run this to create the rc and service
+        initialize:
+        - kubectl:
+            server: $KUBERNETES_MASTER
+            username: $KUBERNETES_USERNAME
+            password: $KUBERNETES_PASSWORD
+            insecure-skip-tls-verify: true
+            command: create -f controller.json
+        - kubectl:
+            server: $KUBERNETES_MASTER
+            username: $KUBERNETES_USERNAME
+            password: $KUBERNETES_PASSWORD
+            insecure-skip-tls-verify: false
+            command: create -f helloworld-service.json
+        # Update the replica controller to $WERCKER_GIT_COMMIT
+        rolling-update:
+        - kubectl:
+            server: $KUBERNETES_MASTER
+            username: $KUBERNETES_USERNAME
+            password: $KUBERNETES_PASSWORD
+            insecure-skip-tls-verify: false
+            command: rolling-update Commit $WERCKER_GIT_COMMIT to $KUBERNETES_MASTER
+            image: $GCLOUD_REPOSITORY:$WERCKER_GIT_COMMIT
