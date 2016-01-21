@@ -35,7 +35,6 @@ deploy:
     - script:
         name: Google cloud authentication
         code: |
-            gcloud components update
             gcloud auth activate-refresh-token $GCLOUD_ACCOUNT $GCLOUD_REFRESH_TOKEN
             gcloud docker --authorize-only
             gcloud config set compute/zone $GCLOUD_COMPUTEZONE
@@ -62,7 +61,6 @@ deploy:
     - script:
         name: Google cloud authentication
         code: |
-            gcloud components update
             gcloud auth activate-refresh-token $GCLOUD_ACCOUNT $GCLOUD_REFRESH_TOKEN
             gcloud docker --authorize-only
             gcloud config set compute/zone $GCLOUD_COMPUTEZONE
@@ -73,7 +71,7 @@ deploy:
         server: $KUBERNETES_MASTER
         username: $KUBERNETES_USERNAME
         password: $KUBERNETES_PASSWORD
-        insecure-skip-tls-verify: true
+        insecure-skip-tls-verify: false
         command: create -f controller.json
     - kubectl:
         server: $KUBERNETES_MASTER
@@ -86,7 +84,6 @@ deploy:
     - script:
         name: Google cloud authentication
         code: |
-            gcloud components update
             gcloud auth activate-refresh-token $GCLOUD_ACCOUNT $GCLOUD_REFRESH_TOKEN
             gcloud docker --authorize-only
             gcloud config set compute/zone $GCLOUD_COMPUTEZONE
