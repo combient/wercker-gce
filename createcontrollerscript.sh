@@ -18,7 +18,7 @@ cat > controller.json <<EOF
       "template":{
          "metadata":{
             "labels":{
-               "app":"helloworld"
+               "app":"helloworld",
                "deployment": "${WERCKER_GIT_COMMIT}"
             }
          },
