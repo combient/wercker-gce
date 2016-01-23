@@ -62,7 +62,7 @@ deploy:
             name: install jq
             code: wget -O /usr/local/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5rc1/jq-linux-x86_64-static && chmod a+x /usr/local/bin/jq
     - script:
-        name: Google cloud authentication
+        name: Google cloud authentication and create
         code: |
             gcloud auth activate-refresh-token $GCLOUD_ACCOUNT $GCLOUD_REFRESH_TOKEN
             gcloud docker --authorize-only

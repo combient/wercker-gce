@@ -1,23 +1,22 @@
 {
-  "kind": "Service",
-  "apiVersion": "v1",
-  "metadata": {
-    "name": "helloworld",
-    "labels": {
-      "name": "helloworld"
+  "kind":"Service",
+  "apiVersion":"v1",
+  "metadata":{
+    "name":"helloworld",
+    "labels":{
+      "app":"helloworld"
     }
   },
   "spec":{
-    "createExternalLoadBalancer": true,
     "ports": [
       {
-        "port": 5000,
-        "targetPort": "http-server",
-        "protocol": "TCP"
+        "port":5000,
+        "targetPort":"http-server"
       }
     ],
     "selector":{
-      "name":"helloworld"
-    }
+      "app":"helloworld"
+    },
+    "type": "LoadBalancer"
   }
 }
