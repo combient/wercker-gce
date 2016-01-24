@@ -14,6 +14,7 @@ build:
         code: |
            cp start.sh "$WERCKER_OUTPUT_DIR"
            chmod u+x "$WERCKER_OUTPUT_DIR"/start.sh
+           ls -al "$WERCKER_OUTPUT_DIR"
      # Create cities-controller.json for initialization
     - script:
         name: create controller.json
