@@ -1,20 +1,14 @@
-build:
-    box: combient/java-mvn
-    steps:
+box: combient/java-mvn
 
+build:
+    steps:
     - script:
         name: show base information
         code: |
             mvn -v
-            echo $JAVA_HOME
+            echo JAVA HOME : $JAVA_HOME
             java -version
             javac -version
-    - script:
-        name: copy start script
-        code: |
-           cp start.sh "$WERCKER_OUTPUT_DIR"
-           chmod a+x "$WERCKER_OUTPUT_DIR"/start.sh
-           ls -al "$WERCKER_OUTPUT_DIR"
      # Create cities-controller.json for initialization
     - script:
         name: create controller.json
@@ -27,6 +21,15 @@ build:
         name: maven package
         code: |
             mvn -Dmaven.repo.local=$WERCKER_CACHE_DIR package
+    - script:
+        name: copy resources
+        code: |
+           cp start.sh "$WERCKER_OUTPUT_DIR"
+           cp example.yml "$WERCKER_OUTPUT_DIR"
+           cp target/dropwizard-example-1.0.0-SNAPSHOT.jar "$WERCKER_OUTPUT_DIR"
+           chmod a+x "$WERCKER_OUTPUT_DIR"/start.sh
+           echo $WERCKER_GIT_COMMIT > $WERCKER_OUTPUT_DIR/HEAD
+           ls -al "$WERCKER_OUTPUT_DIR"
 deploy:
     box: google/cloud-sdk
     steps:
@@ -36,6 +39,7 @@ deploy:
     - script:
         name: Google cloud authentication
         code: |
+            ls -al "$WERCKER_OUTPUT_DIR"
             gcloud auth activate-refresh-token $GCLOUD_ACCOUNT $GCLOUD_REFRESH_TOKEN
             gcloud docker --authorize-only
             gcloud config set compute/zone $GCLOUD_COMPUTEZONE
