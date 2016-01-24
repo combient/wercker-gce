@@ -11,7 +11,7 @@ cat > controller.json <<EOF
       }
    },
    "spec":{
-      "replicas":3,
+      "replicas":1,
       "selector":{
          "app":"helloworld"
       },
