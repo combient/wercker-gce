@@ -1,120 +1,119 @@
-box: combient/java-mvn
-
-build:
-    steps:
-    - script:
-        name: show base information
-        code: |
-            mvn -v
-            echo JAVA HOME : $JAVA_HOME
-            java -version
-            javac -version
-     # Create cities-controller.json for initialization
-    - script:
-        name: create controller.json
-        code: bash ./createcontrollerscript.sh
-     # Copy binary to location that gets passed along to deploy
-    - script:
-        name: copy json
-        code: cp controller.json helloworld-service.json "$WERCKER_OUTPUT_DIR"
-    - script:
-        name: maven package
-        code: |
-            mvn -Dmaven.repo.local=$WERCKER_CACHE_DIR package
-    - script:
-        name: copy resources
-        code: |
-           cp start.sh "$WERCKER_OUTPUT_DIR"
-           cp example.yml "$WERCKER_OUTPUT_DIR"
-           cp target/dropwizard-example-1.0.0-SNAPSHOT.jar "$WERCKER_OUTPUT_DIR"
-           chmod a+x "$WERCKER_OUTPUT_DIR"/start.sh
-           echo $WERCKER_GIT_COMMIT > $WERCKER_OUTPUT_DIR/HEAD
-           ls -al "$WERCKER_OUTPUT_DIR"
-deploy:
-    box: google/cloud-sdk
-    steps:
-    - script:
-        name: install jq
-        code: wget -O /usr/local/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5rc1/jq-linux-x86_64-static && chmod a+x /usr/local/bin/jq
-    - script:
-        name: Google cloud authentication
-        code: |
-            ls -al "$WERCKER_OUTPUT_DIR"
-            gcloud auth activate-refresh-token $GCLOUD_ACCOUNT $GCLOUD_REFRESH_TOKEN
-            gcloud docker --authorize-only
-            gcloud config set compute/zone $GCLOUD_COMPUTEZONE
-            gcloud config set project $GCLOUD_PROJECT
-            gcloud container clusters get-credentials $GCLOUD_GCE_CLUSTER
-            export GCR_AUTH_TOKEN=$(cat $HOME/.dockercfg | jq --raw-output '.["https://gcr.io"].auth' | base64 --decode | cut -d ':' -f2)
-    - script:
-          name: Google cloud information
+  build:
+      box: combient/java-mvn
+      steps:
+      - script:
+          name: show base information
           code: |
-              gcloud info
-              gcloud components list
-              kubectl describe no
-              kubectl get rc
-    - internal/docker-push:
-        username: _token
-        password: $GCR_AUTH_TOKEN
-        tag: $WERCKER_GIT_COMMIT
-        cmd: /start.sh
-        ports: "8080"
-        repository: $GCLOUD_REPOSITORY
-        registry: $GCLOUD_REGISTRY
-        # Run this to create the rc and service
-    initialize:
-    - script:
-            name: install jq
-            code: wget -O /usr/local/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5rc1/jq-linux-x86_64-static && chmod a+x /usr/local/bin/jq
-    - script:
-        name: Google cloud authentication and create
-        code: |
-            gcloud auth activate-refresh-token $GCLOUD_ACCOUNT $GCLOUD_REFRESH_TOKEN
-            gcloud docker --authorize-only
-            gcloud config set compute/zone $GCLOUD_COMPUTEZONE
-            gcloud config set project $GCLOUD_PROJECT
-            gcloud config set container/cluster $GCLOUD_GCE_CLUSTER
-            gcloud container clusters get-credentials $GCLOUD_GCE_CLUSTER
-            export GCR_AUTH_TOKEN=$(cat $HOME/.dockercfg | jq --raw-output '.["https://gcr.io"].auth' | base64 --decode | cut -d ':' -f2)
-            kubectl describe services
-            echo ">>controller.json"
-            cat controller.json
-            echo ">>controller.json"
-            echo ">>helloworld-service.json"
-            cat helloworld-service.json
-            echo ">>helloworld-service.json"
-            kubectl create -f controller.json
-            kubectl create -f helloworld-service.json
-            gcloud container clusters describe $GCLOUD_GCE_CLUSTER
-            kubectl get pods
-#    - kubectl:
-#        server: $KUBERNETES_MASTER
-#        username: $KUBERNETES_USERNAME
-#        password: $KUBERNETES_PASSWORD
-#        insecure-skip-tls-verify: false
-#        command: create -f controller.json
-#    - kubectl:
-#        server: $KUBERNETES_MASTER
-#        username: $KUBERNETES_USERNAME
-#        password: $KUBERNETES_PASSWORD
-#        insecure-skip-tls-verify: false
-#        command: create -f helloworld-service.json
-    # Update the replica controller to $WERCKER_GIT_COMMIT
-    rolling-update:
-    - script:
-        name: Google cloud authentication
-        code: |
-            gcloud auth activate-refresh-token $GCLOUD_ACCOUNT $GCLOUD_REFRESH_TOKEN
-            gcloud docker --authorize-only
-            gcloud config set compute/zone $GCLOUD_COMPUTEZONE
-            gcloud config set project $GCLOUD_PROJECT
-            gcloud config set container/cluster $GCLOUD_GCE_CLUSTER
-            gcloud container clusters get-credentials $GCLOUD_GCE_CLUSTER
-            export GCR_AUTH_TOKEN=$(cat $HOME/.dockercfg | jq --raw-output '.["https://gcr.io"].auth' | base64 --decode | cut -d ':' -f2)
-    - kubectl:
-        server: $KUBERNETES_MASTER
-        username: $KUBERNETES_USERNAME
-        password: $KUBERNETES_PASSWORD
-        insecure-skip-tls-verify: false
-        command: rolling-update Commit $WERCKER_GIT_COMMIT to $KUBERNETES_MASTER
-        image: $GCLOUD_REPOSITORY:$WERCKER_GIT_COMMIT
+              mvn -v
+              echo JAVA HOME : $JAVA_HOME
+              java -version
+              javac -version
+       # Create cities-controller.json for initialization
+      - script:
+          name: create controller.json
+          code: bash ./createcontrollerscript.sh
+       # Copy binary to location that gets passed along to deploy
+      - script:
+          name: copy json
+          code: cp controller.json helloworld-service.json "$WERCKER_OUTPUT_DIR"
+      - script:
+          name: maven package
+          code: |
+              mvn -Dmaven.repo.local=$WERCKER_CACHE_DIR package
+      - script:
+          name: copy resources
+          code: |
+             cp start.sh "$WERCKER_OUTPUT_DIR"
+             cp example.yml "$WERCKER_OUTPUT_DIR"
+             cp target/dropwizard-example-1.0.0-SNAPSHOT.jar "$WERCKER_OUTPUT_DIR"
+             chmod a+x "$WERCKER_OUTPUT_DIR"/start.sh
+             echo $WERCKER_GIT_COMMIT > $WERCKER_OUTPUT_DIR/HEAD
+             ls -al "$WERCKER_OUTPUT_DIR"
+  deploy:
+      box: google/cloud-sdk
+      steps:
+      - script:
+          name: install jq
+          code: wget -O /usr/local/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5rc1/jq-linux-x86_64-static && chmod a+x /usr/local/bin/jq
+      - script:
+          name: Google cloud authentication
+          code: |
+              ls -al "$WERCKER_OUTPUT_DIR"
+              gcloud auth activate-refresh-token $GCLOUD_ACCOUNT $GCLOUD_REFRESH_TOKEN
+              gcloud docker --authorize-only
+              gcloud config set compute/zone $GCLOUD_COMPUTEZONE
+              gcloud config set project $GCLOUD_PROJECT
+              gcloud container clusters get-credentials $GCLOUD_GCE_CLUSTER
+              export GCR_AUTH_TOKEN=$(cat $HOME/.dockercfg | jq --raw-output '.["https://gcr.io"].auth' | base64 --decode | cut -d ':' -f2)
+      - script:
+            name: Google cloud information
+            code: |
+                gcloud info
+                gcloud components list
+                kubectl describe no
+                kubectl get rc
+      - internal/docker-scratch-push:
+          username: _token
+          password: $GCR_AUTH_TOKEN
+          tag: $WERCKER_GIT_COMMIT
+          cmd: ./start.sh
+          ports: "8080"
+          repository: $GCLOUD_REPOSITORY
+          registry: $GCLOUD_REGISTRY
+          # Run this to create the rc and service
+      initialize:
+      - script:
+              name: install jq
+              code: wget -O /usr/local/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5rc1/jq-linux-x86_64-static && chmod a+x /usr/local/bin/jq
+      - script:
+          name: Google cloud authentication and create
+          code: |
+              gcloud auth activate-refresh-token $GCLOUD_ACCOUNT $GCLOUD_REFRESH_TOKEN
+              gcloud docker --authorize-only
+              gcloud config set compute/zone $GCLOUD_COMPUTEZONE
+              gcloud config set project $GCLOUD_PROJECT
+              gcloud config set container/cluster $GCLOUD_GCE_CLUSTER
+              gcloud container clusters get-credentials $GCLOUD_GCE_CLUSTER
+              export GCR_AUTH_TOKEN=$(cat $HOME/.dockercfg | jq --raw-output '.["https://gcr.io"].auth' | base64 --decode | cut -d ':' -f2)
+              kubectl describe services
+              echo ">>controller.json"
+              cat controller.json
+              echo ">>controller.json"
+              echo ">>helloworld-service.json"
+              cat helloworld-service.json
+              echo ">>helloworld-service.json"
+              kubectl create -f controller.json
+              kubectl create -f helloworld-service.json
+              gcloud container clusters describe $GCLOUD_GCE_CLUSTER
+              kubectl get pods
+  #    - kubectl:
+  #        server: $KUBERNETES_MASTER
+  #        username: $KUBERNETES_USERNAME
+  #        password: $KUBERNETES_PASSWORD
+  #        insecure-skip-tls-verify: false
+  #        command: create -f controller.json
+  #    - kubectl:
+  #        server: $KUBERNETES_MASTER
+  #        username: $KUBERNETES_USERNAME
+  #        password: $KUBERNETES_PASSWORD
+  #        insecure-skip-tls-verify: false
+  #        command: create -f helloworld-service.json
+      # Update the replica controller to $WERCKER_GIT_COMMIT
+      rolling-update:
+      - script:
+          name: Google cloud authentication
+          code: |
+              gcloud auth activate-refresh-token $GCLOUD_ACCOUNT $GCLOUD_REFRESH_TOKEN
+              gcloud docker --authorize-only
+              gcloud config set compute/zone $GCLOUD_COMPUTEZONE
+              gcloud config set project $GCLOUD_PROJECT
+              gcloud config set container/cluster $GCLOUD_GCE_CLUSTER
+              gcloud container clusters get-credentials $GCLOUD_GCE_CLUSTER
+              export GCR_AUTH_TOKEN=$(cat $HOME/.dockercfg | jq --raw-output '.["https://gcr.io"].auth' | base64 --decode | cut -d ':' -f2)
+      - kubectl:
+          server: $KUBERNETES_MASTER
+          username: $KUBERNETES_USERNAME
+          password: $KUBERNETES_PASSWORD
+          insecure-skip-tls-verify: false
+          command: rolling-update Commit $WERCKER_GIT_COMMIT to $KUBERNETES_MASTER
+          image: $GCLOUD_REPOSITORY:$WERCKER_GIT_COMMIT
