@@ -11,7 +11,7 @@ public class Saying {
     private String content;
 
     public Saying() {
-        // Jackson deserialization
+        // Jackson deserialization.
     }
 
     public Saying(long id, String content) {

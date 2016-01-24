@@ -13,7 +13,7 @@ build:
         name: copy start script
         code: |
            cp start.sh "$WERCKER_OUTPUT_DIR"
-           chmod u+x "$WERCKER_OUTPUT_DIR"/start.sh
+           chmod a+x "$WERCKER_OUTPUT_DIR"/start.sh
            ls -al "$WERCKER_OUTPUT_DIR"
      # Create cities-controller.json for initialization
     - script:
@@ -53,7 +53,7 @@ deploy:
         username: _token
         password: $GCR_AUTH_TOKEN
         tag: $WERCKER_GIT_COMMIT
-        cmd: ./start.sh
+        cmd: /start.sh
         ports: "8080"
         repository: $GCLOUD_REPOSITORY
         registry: $GCLOUD_REGISTRY
@@ -81,6 +81,8 @@ deploy:
             echo ">>helloworld-service.json"
             kubectl create -f controller.json
             kubectl create -f helloworld-service.json
+            gcloud container clusters describe $GCLOUD_GCE_CLUSTER
+            kubectl get pods
 #    - kubectl:
 #        server: $KUBERNETES_MASTER
 #        username: $KUBERNETES_USERNAME
