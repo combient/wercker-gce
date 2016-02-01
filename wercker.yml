@@ -54,16 +54,16 @@
       - script:
                name: List WERCKER_INPUT_DIR contents
                code: |
-                   ls -al "$WERCKER_INPUT_DIR"
-                   cat  $WERCKER_OUTPUT_DIR/HEAD
+                   ls -al "$WERCKER_SOURCE_DIR"
+                   cat  $$WERCKER_SOURCE_DIR/HEAD
       - script:
                name: Copy binaries
                code: |
                    mkdir /target
                    chmod a+rx target
-                   cp "$WERCKER_INPUT_DIR"/target.sh /target/start.sh
+                   cp "$WERCKER_SOURCE_DIR"/target.sh /target/start.sh
                    chmod a+rx /target/start.sh
-                   cp "$WERCKER_INPUT_DIR"/dropwizard-example-1.0.0-SNAPSHOT.jar /target/dropwizard-example-1.0.0-SNAPSHOT.jar
+                   cp "$WERCKER_SOURCE_DIR"/dropwizard-example-1.0.0-SNAPSHOT.jar /target/dropwizard-example-1.0.0-SNAPSHOT.jar
                    chmod a+rx /target/target/dropwizard-example-1.0.0-SNAPSHOT.jar
       - internal/docker-scratch-push:
           username: _token
@@ -80,13 +80,13 @@
           username: $KUBERNETES_USERNAME
           password: $KUBERNETES_PASSWORD
           insecure-skip-tls-verify: false
-          command: create -f controller.json
+          command: create -f "$WERCKER_SOURCE_DIR"/controller.json
       - kubectl:
           server: $KUBERNETES_MASTER
           username: $KUBERNETES_USERNAME
           password: $KUBERNETES_PASSWORD
           insecure-skip-tls-verify: false
-          command: create -f helloworld-service.json
+          command: create -f "$WERCKER_SOURCE_DIR"/helloworld-service.json
       # Update the replica controller to $WERCKER_GIT_COMMIT
       rolling-update:
       - kubectl:
