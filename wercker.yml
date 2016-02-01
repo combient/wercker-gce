@@ -1,3 +1,4 @@
+
   build:
       box: combient/java-mvn
       steps:
@@ -29,12 +30,15 @@
              chmod a+x "$WERCKER_OUTPUT_DIR"/start.sh
              echo $WERCKER_GIT_COMMIT > $WERCKER_OUTPUT_DIR/HEAD
              ls -al "$WERCKER_OUTPUT_DIR"
+      - kubectl:
+              server: $KUBERNETES_MASTER
+              username: $KUBERNETES_USERNAME
+              password: $KUBERNETES_PASSWORD
+              insecure-skip-tls-verify: true
+              command: get nodes
   deploy:
-      box: google/cloud-sdk
+      box: combient/java-gce
       steps:
-      - script:
-          name: install jq
-          code: wget -O /usr/local/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5rc1/jq-linux-x86_64-static && chmod a+x /usr/local/bin/jq
       - script:
           name: Google cloud authentication
           code: |
