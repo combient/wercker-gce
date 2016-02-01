@@ -17,7 +17,7 @@
       - script:
           name: copy helloworld-service.json
           code: cp controller.json helloworld-service.json "$WERCKER_OUTPUT_DIR"
-            echo ">>controller.json"
+                echo ">>controller.json"
       - script:
           name: Display GCE JSON files contents
           code: |
