@@ -17,15 +17,15 @@
       - script:
           name: copy helloworld-service.json
           code: cp controller.json helloworld-service.json "$WERCKER_OUTPUT_DIR"
-                echo ">>controller.json"
       - script:
           name: Display GCE JSON files contents
           code: |
+            echo "**controller.json"
             cat controller.json
-            echo ">>controller.json"
-            echo ">>helloworld-service.json"
+            echo "**controller.json"
+            echo "**helloworld-service.json"
             cat helloworld-service.json
-            echo ">>helloworld-service.json"
+            echo "**helloworld-service.json"
       - script:
           name: maven package
           code: |
