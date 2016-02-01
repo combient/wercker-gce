@@ -55,7 +55,8 @@
                name: List WERCKER_INPUT_DIR contents
                code: |
                    ls -al "$WERCKER_SOURCE_DIR"
-                   cat  $$WERCKER_SOURCE_DIR/HEAD
+                   echo "**HEAD"
+                   cat  "$WERCKER_SOURCE_DIR"/HEAD
       - script:
                name: Copy binaries
                code: |
