@@ -60,11 +60,11 @@
           code: |
               mkdir /target
               chmod a+rx /target
-              cp "$WERCKER_SOURCE_DIR"/target.sh /target/start.sh
+              cp "$WERCKER_SOURCE_DIR"/start.sh /target/start.sh
               chmod a+rx /target/start.sh
               cp "$WERCKER_SOURCE_DIR"/dropwizard-example-1.0.0-SNAPSHOT.jar /target/dropwizard-example-1.0.0-SNAPSHOT.jar
               chmod a+rx /target/target/dropwizard-example-1.0.0-SNAPSHOT.jar
-      - internal/docker-scratch-push:
+      - internal/docker-push:
           username: _token
           password: $GCR_AUTH_TOKEN
           tag: $WERCKER_GIT_COMMIT
