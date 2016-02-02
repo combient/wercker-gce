@@ -78,13 +78,13 @@
           server: $KUBERNETES_MASTER
           username: $KUBERNETES_USERNAME
           password: $KUBERNETES_PASSWORD
-          insecure-skip-tls-verify: false
+          insecure-skip-tls-verify: true
           command: create -f "$WERCKER_SOURCE_DIR"/controller.json
       - kubectl:
           server: $KUBERNETES_MASTER
           username: $KUBERNETES_USERNAME
           password: $KUBERNETES_PASSWORD
-          insecure-skip-tls-verify: false
+          insecure-skip-tls-verify: true
           command: create -f "$WERCKER_SOURCE_DIR"/helloworld-service.json
       # Update the replica controller to $WERCKER_GIT_COMMIT
       rolling-update:
