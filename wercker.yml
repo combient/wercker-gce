@@ -66,6 +66,8 @@
               chmod a+rx /target/dropwizard-example-1.0.0-SNAPSHOT.jar
               cp "$WERCKER_SOURCE_DIR"/example.yml  /target/example.yml
               chmod a+rx /target/example.yml
+              cp "$WERCKER_SOURCE_DIR"/example.keystore  /target/example.keystore
+              chmod a+rx /target/example.keystore
       - internal/docker-push:
           username: _token
           password: $GCR_AUTH_TOKEN
