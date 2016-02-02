@@ -35,6 +35,7 @@
           code: |
              cp start.sh "$WERCKER_OUTPUT_DIR"
              cp example.yml "$WERCKER_OUTPUT_DIR"
+             cp example.keystore "$WERCKER_OUTPUT_DIR"
              cp target/dropwizard-example-1.0.0-SNAPSHOT.jar "$WERCKER_OUTPUT_DIR"
              chmod a+x "$WERCKER_OUTPUT_DIR"/start.sh
              echo "hello" > "$WERCKER_OUTPUT_DIR"/hello
