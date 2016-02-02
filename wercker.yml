@@ -79,7 +79,7 @@
           username: $KUBERNETES_USERNAME
           password: $KUBERNETES_PASSWORD
           insecure-skip-tls-verify: true
-          command: run helloworld -image $GCLOUD_REPOSITORY:$WERCKER_GIT_COMMIT --port=8080
+          command: run helloworld --image $GCLOUD_REPOSITORY:$WERCKER_GIT_COMMIT --port=8080
 #      - kubectl:
 #          server: $KUBERNETES_MASTER
 #          username: $KUBERNETES_USERNAME
