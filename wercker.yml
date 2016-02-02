@@ -37,7 +37,7 @@
              cp example.yml "$WERCKER_OUTPUT_DIR"
              cp target/dropwizard-example-1.0.0-SNAPSHOT.jar "$WERCKER_OUTPUT_DIR"
              chmod a+x "$WERCKER_OUTPUT_DIR"/start.sh
-             echo $WERCKER_GIT_COMMIT > $WERCKER_OUTPUT_DIR/HEAD
+             echo "hello" > "$WERCKER_OUTPUT_DIR"/hello
              ls -al "$WERCKER_OUTPUT_DIR"
   deploy:
       box: combient/java-gce
@@ -52,20 +52,18 @@
               gcloud container clusters get-credentials $GCLOUD_GCE_CLUSTER
               export GCR_AUTH_TOKEN=$(cat $HOME/.dockercfg | jq --raw-output '.["https://gcr.io"].auth' | base64 --decode | cut -d ':' -f2)
       - script:
-               name: List WERCKER_INPUT_DIR contents
-               code: |
-                   ls -al "$WERCKER_SOURCE_DIR"
-                   echo "**HEAD"
-                   cat  "$WERCKER_SOURCE_DIR"/HEAD
+          name: List $WERCKER_SOURCE_DIR contents
+          code: >
+              ls -al "$WERCKER_SOURCE_DIR"
       - script:
-               name: Copy binaries
-               code: |
-                   mkdir /target
-                   chmod a+rx target
-                   cp "$WERCKER_SOURCE_DIR"/target.sh /target/start.sh
-                   chmod a+rx /target/start.sh
-                   cp "$WERCKER_SOURCE_DIR"/dropwizard-example-1.0.0-SNAPSHOT.jar /target/dropwizard-example-1.0.0-SNAPSHOT.jar
-                   chmod a+rx /target/target/dropwizard-example-1.0.0-SNAPSHOT.jar
+          name: Copy binaries
+          code: |
+              mkdir /target
+              chmod a+rx /target
+              cp "$WERCKER_SOURCE_DIR"/target.sh /target/start.sh
+              chmod a+rx /target/start.sh
+              cp "$WERCKER_SOURCE_DIR"/dropwizard-example-1.0.0-SNAPSHOT.jar /target/dropwizard-example-1.0.0-SNAPSHOT.jar
+              chmod a+rx /target/target/dropwizard-example-1.0.0-SNAPSHOT.jar
       - internal/docker-scratch-push:
           username: _token
           password: $GCR_AUTH_TOKEN
