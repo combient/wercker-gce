@@ -5,15 +5,13 @@
 ## Prerequisites
 
 1. wercker account.
-2. GCE account. [And getting started.](https://cloud.google.com/compute/docs/quickstart).
+2. GCE account. [getting started.](https://cloud.google.com/compute/docs/quickstart).
                 [Howto push containers to Google container registry](http://devcenter.wercker.com/docs/containers/pushing-containers.html#gcr]
-4. kubernetes. [And getting started](http://kubernetes.io/gettingstarted/).
+4. kubernetes. [getting started](http://kubernetes.io/gettingstarted/).
 
 ## Configuring GCE
 
-<!-- 1. Setup a project for your cluster with meaningful properites such as names etc.
- 
- 2. Spawn some CoreOS instances via GUI -->
+
 Though it possible to bootstrap an GCE Container Engine Cluster with just a several click, we want to take the hard way and configure our cluster from a workstation ourselves.
 
 The kubernetes project provides [documentation](https://github.com/GoogleCloudPlatform/kubernetes/blob/master/docs/getting-started-guides/gce.md) for this case.
